@@ -144,7 +144,7 @@ function getBook(id) {
 }
 
 //destructuring
-const books = getBook(2);
+const books = getBook(3);
 
 console.log(books);
 
@@ -172,10 +172,18 @@ const updatedBook = {
 
 updatedBook;
 
+//arrow function declaration and expression
+
+const getYear = (str) => {
+  return str.split("-")[0];
+};
+
+console.log(getYear(publicationDate));
+
 //template literals
-const summary = `${title} is a book which was authored by ${author} and published in ${
-  publicationDate.split("-")[0]
-}. The book is ${
+const summary = `${title} is a book which was authored by ${author} and published in ${getYear(
+  publicationDate
+)}. The book is ${
   pages > 1000 ? "over a thousand" : "less than a thousand"
 } pages long and has ${
   hasMovieAdaptation ? "" : "not"
@@ -186,3 +194,115 @@ summary;
 //ternary operators - conditiion ? executed if condition met : executed if condition not met
 
 pages > 1000 ? "over a thousand" : "less than a thousand";
+
+//logical operator short-circuiting
+//uses truthy and falsy values
+//falsy: false , 0 , -0 , 0n , "" , null , undefined , NaN , and document
+//truthy: everything else
+
+// AND operator
+console.log(true && "show if true");
+console.log(false && "show if false");
+console.log(hasMovieAdaptation && "This book has a movie");
+console.log("Anirban" && "Strings");
+console.log(0 && "other strings");
+
+// OR operator
+console.log(true || "Some string");
+console.log(false || "other string");
+console.log(0 || null);
+
+//NULLISH COALESCING operator - returns RHS if LHS is null or undefined, else returns LHS
+console.log(undefined ?? 0);
+console.log(0 ?? undefined);
+
+console.log(books.translations.bengali || "NOT TRANSLATED");
+
+//optional chaining - ? - only continues along the object if the ? preceding objects are defined
+console.log(books.reviews.librarything?.reviewsCount);
+const countWrong = books.reviews.librarything?.reviewsCount || "no data";
+countWrong;
+
+const getTotalReviewCount = (books) => {
+  const goodread = books.reviews?.goodreads?.reviewsCount;
+  const libany = books.reviews?.librarything?.reviewsCount ?? 0;
+  return goodread + libany;
+};
+
+console.log(getTotalReviewCount(books));
+
+//functional array methods - returns new array instead of original array
+
+// map method
+books;
+
+const x = [1, 2, 3, 4, 5];
+console.log(x.map((el) => el * 2));
+
+const book = getBooks();
+const titles = book.map((el) => el.title);
+console.log(titles);
+
+const essentials = book.map((el) => {
+  return { title: el.title, author: el.author };
+});
+
+essentials;
+
+//filter method
+const longBooks = book.filter((el) => el.pages > 500);
+longBooks;
+
+const longBooksWithMovie = book
+  .filter((el) => el.pages > 500)
+  .filter((el) => el.hasMovieAdaptation);
+
+longBooksWithMovie;
+
+const adventureBooks = book
+  .filter((el) => el.genres.includes("adventure"))
+  .map((el) => el.title);
+
+adventureBooks;
+
+//reduce method
+
+const pagesAllBooks = book.reduce((acc, el) => acc + el.pages, 0);
+pagesAllBooks;
+
+//sort method - unlike other methods, sort method mutates the original array instead of creating a
+// brand new copy. So it is essential that a copy is created beforehand.
+
+const z = [3, 5, 1, 9, 2, 4, 7, 1, 0, 4, 8, 6, 4];
+const sorted = z.sort((a, b) => a - b);
+sorted;
+
+//descending order
+const sortedByPages = book.slice().sort((a, b) => b.pages - a.pages);
+sortedByPages;
+
+//working with immutable arrays
+//// 1) Add a book object to array
+
+const newBook = {
+  id: 6,
+  title: "Harry Potter and the Chamber of Secrets",
+  author: "J. K. Rowling",
+};
+
+const booksAfterAdd = [...book, newBook]; // spread the current object and append the new object
+
+booksAfterAdd;
+
+//// 2) delete book from array
+
+const booksAfterDelete = booksAfterAdd.filter((el) => el.id !== 3);
+booksAfterDelete;
+
+//// 3) Update a book object while inside the array
+
+const booksAfterUpdate = booksAfterDelete.map((el) =>
+  el.id === 1 ? { ...el, pages: 123 } : el
+);
+
+booksAfterUpdate;
